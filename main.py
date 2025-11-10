@@ -41,12 +41,13 @@ def webhook():
     bot_reply = "Lo siento, ocurrió un error procesando la respuesta."
 
     if response.status_code == 200:
-        bot_reply = response.json().get("response", "No hay respuesta disponible.")
+        data = response.json()
+        try:
+            bot_reply = data["choices"][0]["message"]["content"]
+        except (KeyError, IndexError):
+            bot_reply = "No hay respuesta disponible."
 
     print("🤖 Sofía respondió:", bot_reply)
 
     # Devuelve respuesta a WATI
-    return jsonify({"reply": bot_reply}), 200
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=10000)
+    retur
